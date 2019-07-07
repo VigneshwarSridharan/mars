@@ -1,0 +1,18 @@
+.main-navigation {
+    background-color: #ffffff;
+    border-bottom: solid 1px #ededed;
+    display: flex;
+    .navigations {
+        margin-left: auto;
+        display: flex;
+        .item {
+            height: 4rem;
+            width: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: solid 1px #ededed;
+            font-size: 18px;
+        }
+    }
+}

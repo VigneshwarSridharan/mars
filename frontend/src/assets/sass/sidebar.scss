@@ -1,0 +1,62 @@
+@import "variables";
+.sidebar {
+    width: 320px;
+    background-color: #ffffff;
+    border-right: solid 1px #ededed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    .brand {
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .navigation {
+        padding: 1rem;
+        overflow: auto;
+        .main-nav {
+            padding: 0 1rem ;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            border-radius: 5px;
+            line-height: 1;
+            color: $gray-light;
+            margin-bottom: .5rem;
+            text-decoration: none;
+            .icon {
+                margin-right: 8px;
+                font-size: 24px;
+            }
+            &:hover {
+                background: linear-gradient(135deg, hsl(0, 0%, 90%) 0%, hsl(0, 0%, 95%) 100%)
+            }
+            &.active {
+                background: linear-gradient(135deg, $primary 0%, $primary-light 100%);
+                color: #ffffff;
+            }
+        }
+    }
+    .user-info-wrapper {
+        padding: 1rem;
+        .user-info {
+            padding: .5rem;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #cccccc 0%, #D9D9D9 100%);
+            display: flex;
+            align-items: center;
+            .profile-pic {
+                width: 3rem;
+                border-radius: 50%;
+            }
+            .dot {
+                display: inline-block;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+            }
+        }
+    }
+}
