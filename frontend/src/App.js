@@ -1,5 +1,4 @@
 import React, { Suspense } from 'react';
-import './assets/sass/style.scss';
 import Sidebar from './layouts/Sidebar';
 import Navbar from './layouts/Navbar';
 import { Scrollbars } from 'react-custom-scrollbars';

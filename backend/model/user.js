@@ -1,4 +1,4 @@
-var sql = require('../db');
+var sql = require('../utils/db');
 var md5 = require('md5');
 
 module.exports = {
