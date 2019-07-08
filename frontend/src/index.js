@@ -2,18 +2,19 @@ import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
 import './assets/sass/style.scss';
 import * as serviceWorker from './serviceWorker';
+import { Preloader } from './utils';
 const uuidv4 = require('uuid/v4');
 
 window.uid = uuidv4;
-const Login = lazy(() => import('./views/Login'));
+const Landing = lazy(() => import('./Landing'));
 const App = React.lazy(() => import('./App'))
 
 let { token = "" } = localStorage;
 
 
 ReactDOM.render(
-    <Suspense fallback={<div>Loding...</div>}>
-        {token ? <App /> : <Login />}
+    <Suspense fallback={Preloader}>
+        {token ? <App /> : <Landing />}
     </Suspense>
     , document.getElementById('root')
 );

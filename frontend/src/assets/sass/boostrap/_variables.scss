@@ -425,7 +425,7 @@ $btn-line-height-lg:          $input-btn-line-height-lg !default;
 
 $btn-border-width:            0 !default;
 
-$btn-font-weight:             $font-weight-normal !default;
+$btn-font-weight:             $font-weight-bold !default;
 $btn-box-shadow:              inset 0 1px 0 rgba($white, .15), 0 1px 1px rgba($black, .075) !default;
 $btn-focus-width:             $input-btn-focus-width !default;
 $btn-focus-box-shadow:        $input-btn-focus-box-shadow !default;
@@ -971,11 +971,11 @@ $alert-padding-x:                   1.25rem !default;
 $alert-margin-bottom:               1rem !default;
 $alert-border-radius:               $border-radius !default;
 $alert-link-font-weight:            $font-weight-bold !default;
-$alert-border-width:                $border-width !default;
+$alert-border-width:                0 !default;
 
-$alert-bg-level:                    -10 !default;
+$alert-bg-level:                    0 !default;
 $alert-border-level:                -9 !default;
-$alert-color-level:                 6 !default;
+$alert-color-level:                 -12 !default;
 
 
 // Progress bars

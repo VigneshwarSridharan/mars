@@ -5,12 +5,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import routes from './router';
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { Spring } from 'react-spring/renderprops'
-
-const Preloader = (
-    <div className="preloader">
-        <img className="m-auto" src={'./assets/images/logo.png'} alt="" />
-    </div>
-)
+import { Preloader } from './utils';
 
 function App() {
     return (
@@ -29,6 +24,7 @@ function App() {
                                             <Route
                                                 {...options}
                                                 render={props => {
+                                                    document.title = `Mars - ${options.name}`;
                                                     return animation ?
                                                         (
                                                             <Spring

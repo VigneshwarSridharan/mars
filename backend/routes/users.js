@@ -19,8 +19,16 @@ router.get('/', function (req, res, next) {
 router.post('/login', (req, res) => {
     let { username, password } = req.body;
     User.login(username, password, (err, result) => {
-        let { user_id } = result;
+
+        if (err) return setTimeout(() => {
+            bindRes(err, null, res)
+        }, 5000);;
+
+        let { user_id = "" } = result;
         let token = createJWToken({ user_id });
+        delete result.password;
+        delete result.user_id;
+        delete result.status;
         bindRes(err, { ...result, token }, res);
     })
 })

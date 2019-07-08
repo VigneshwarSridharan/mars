@@ -12,7 +12,7 @@ const Navbar = () => {
         <div className="main-navigation">
             <div className="navigations">
                 {
-                    icons.map((icon,inx) => {
+                    icons.map((icon, inx) => {
                         return (
                             <div className="item" key={window.uid()}>
                                 <i className={icon} />
@@ -20,6 +20,12 @@ const Navbar = () => {
                         )
                     })
                 }
+                <div className="item" onClick={() => {
+                    localStorage.clear();
+                    window.location = '/';
+                }}>
+                    <i className="mdi mdi-power" />
+                </div>
             </div>
         </div>
     )

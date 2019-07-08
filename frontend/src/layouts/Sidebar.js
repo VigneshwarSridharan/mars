@@ -7,6 +7,8 @@ import { NavLink } from 'react-router-dom';
 
 
 const Sidebar = () => {
+    let { userDetails = {} } = localStorage
+    userDetails = JSON.parse(userDetails);
     return (
         <div className="sidebar shadow-lg">
             <div className="brand">
@@ -31,7 +33,7 @@ const Sidebar = () => {
                             let className = `main-nav`;
                             let { icon, name, path } = item;
                             let isActive = (val = {}) => {
-                                let {url=""} = val|| {};
+                                let { url = "" } = val || {};
                                 return window.location.pathname == url
                             }
                             return (
@@ -56,7 +58,7 @@ const Sidebar = () => {
                 <div className="user-info">
                     <img className="profile-pic" src="./assets/images/profile.jpg" alt="" />
                     <div className="ml-2 w-100">
-                        <div><b>John Henderson</b></div>
+                        <div className="text-capitalize"><b>{userDetails.first_name} {userDetails.last_name}</b></div>
                         <div><span className="dot bg-success"></span> <small>Active</small></div>
                     </div>
                     <h5 className="m-0">

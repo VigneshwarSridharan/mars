@@ -6,8 +6,12 @@ import CardHeader from 'reactstrap/lib/CardHeader';
 import Button from 'reactstrap/lib/Button';
 import Animate from '../../components/Animate';
 import Select from '../../components/Select';
+import { Railway } from '../../utils/APIService';
 
 const Dashboard = (props) => {
+    const getInfo = () => Railway.all().then(res => {
+        console.log(res);
+    })
     return (
         <Container fluid>
 
@@ -24,6 +28,7 @@ const Dashboard = (props) => {
                                         color={btn}
                                         key={`button-${inx}`}
                                         className="text-capitalize mr-2"
+                                        onClick={getInfo}
                                     >{btn}</Button>
                                 )
                             })
