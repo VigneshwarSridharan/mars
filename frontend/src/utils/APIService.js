@@ -33,7 +33,8 @@ const Railway = {
 }
 
 const Trading = {
-    getSymbols: query => request.post(`${API_ROOT}/trading/search`,{query})
+    getSymbols: query => request.post(`${API_ROOT}/trading/search`,{query}),
+    getSymbolBasicInfo: symbol => request.post(`${API_ROOT}/trading/symbolBasicInfo`,{symbol})
 }
 
 export {

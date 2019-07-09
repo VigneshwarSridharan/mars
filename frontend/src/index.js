@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom';
 import './assets/sass/style.scss';
 import * as serviceWorker from './serviceWorker';
 import { Preloader } from './utils';
+import { Provider } from 'react-redux'
+import { store } from './store';
+
 const uuidv4 = require('uuid/v4');
 
 window.uid = uuidv4;
@@ -14,7 +17,7 @@ let { token = "" } = localStorage;
 
 ReactDOM.render(
     <Suspense fallback={Preloader}>
-        {token ? <App /> : <Landing />}
+        {token ? <Provider store={store}><App /></Provider> : <Landing />}
     </Suspense>
     , document.getElementById('root')
 );

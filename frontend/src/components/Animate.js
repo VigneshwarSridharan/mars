@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 
 const Animate = ({ children, ...props }) => {
+    if(!Array.isArray(children)) children = [children]
     return (
         <Trail
             items={children}

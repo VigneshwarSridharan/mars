@@ -2,17 +2,18 @@ import React from 'react';
 import '../assets/sass/sidebar.scss';
 import { Trail } from 'react-spring/renderprops';
 import { Scrollbars } from 'react-custom-scrollbars';
-import navData from '../router';
+import routes from '../router';
 import { NavLink } from 'react-router-dom';
 
 
 const Sidebar = () => {
     let { userDetails = {} } = localStorage
     userDetails = JSON.parse(userDetails);
+    let navData = routes.filter(({ display = true }) => display)
     return (
         <div className="sidebar shadow-lg">
             <div className="brand">
-                <img src="./assets/images/logo.png" alt="" />
+                <img src="/assets/images/logo.png" alt="" />
             </div>
             <Scrollbars>
                 <div className="navigation">
@@ -34,7 +35,12 @@ const Sidebar = () => {
                             let { icon, name, path } = item;
                             let isActive = (val = {}) => {
                                 let { url = "" } = val || {};
-                                return window.location.pathname == url
+                                if(url == '/' || url == '') {
+                                    return window.location.pathname == url
+                                }
+                                else {
+                                    return window.location.pathname.includes(url)
+                                }
                             }
                             return (
                                 <NavLink
@@ -56,7 +62,7 @@ const Sidebar = () => {
             </Scrollbars>
             <div className="user-info-wrapper">
                 <div className="user-info">
-                    <img className="profile-pic" src="./assets/images/profile.jpg" alt="" />
+                    <img className="profile-pic" src="/assets/images/profile.jpg" alt="" />
                     <div className="ml-2 w-100">
                         <div className="text-capitalize"><b>{userDetails.first_name} {userDetails.last_name}</b></div>
                         <div><span className="dot bg-success"></span> <small>Active</small></div>

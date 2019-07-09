@@ -20,8 +20,8 @@ let verifyJWTToken = (req, res, next) => {
             if (err) return bindRes(err, 'Unexpected token', res);
 
             if ('exp' in decode && decode.exp - new Date().getTime() > 0) {
-                console.log(decode);
                 let { user_id } = decode;
+                console.log(decode)
                 req.user_id = user_id;
                 next()
             }

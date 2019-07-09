@@ -2,7 +2,8 @@ import { lazy } from 'react';
 
 const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */'../views/Dashboard'));
 const Calendar = lazy(() => import(/* webpackChunkName: "calendar" */'../views/Calendar'));
-const Reports = lazy(() => import(/* webpackChunkName: "reports" */'../views/Reports'));
+const Trading = lazy(() => import(/* webpackChunkName: "reports" */'../views/Trading'));
+const SymbolInfo = lazy(() => import(/* webpackChunkName: "symbol-info" */'../views/SymbolInfo'));
 
 
 
@@ -22,32 +23,39 @@ export default [
         icon: 'mdi mdi-calendar'
     },
     {
-        path: '/reports',
-        component: Reports,
-        name: 'Reports',
-        icon: 'mdi mdi-clipboard-text'
+        path: '/trading/:symbol',
+        component: SymbolInfo,
+        name: 'Symbol Info',
+        icon: 'mdi mdi-chart-timeline-variant',
+        display: false
+    },
+    {
+        path: '/trading',
+        component: Trading,
+        name: 'Trading',
+        icon: 'mdi mdi-chart-timeline-variant'
     },
     {
         path: '/communication',
-        component: Reports,
+        component: Trading,
         name: 'Communication',
         icon: 'mdi mdi-message-processing'
     },
     {
         path: '/deployment',
-        component: Reports,
+        component: Trading,
         name: 'Deployment',
         icon: 'mdi mdi-cube'
     },
     {
         path: '/security',
-        component: Reports,
+        component: Trading,
         name: 'Security',
         icon: 'mdi mdi-security'
     },
     {
         path: '/settings',
-        component: Reports,
+        component: Trading,
         name: 'Settings',
         icon: 'mdi mdi-settings'
     }

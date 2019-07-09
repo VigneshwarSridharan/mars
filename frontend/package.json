@@ -53,10 +53,13 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dev-utils": "^9.0.1",
     "react-dom": "^16.8.6",
+    "react-redux": "^7.1.0",
     "react-router-dom": "^5.0.1",
     "react-select": "^3.0.4",
     "react-spring": "^8.0.27",
     "reactstrap": "^8.0.0",
+    "redux": "^4.0.2",
+    "redux-logger": "^3.0.6",
     "resolve": "1.10.0",
     "sass-loader": "7.1.0",
     "semver": "6.0.0",
@@ -95,7 +98,8 @@
     ]
   },
   "devDependencies": {
-    "node-sass": "^4.12.0"
+    "node-sass": "^4.12.0",
+    "redux-devtools-extension": "^2.13.8"
   },
   "jest": {
     "collectCoverageFrom": [
