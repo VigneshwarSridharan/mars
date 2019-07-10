@@ -1,6 +1,9 @@
 let http = require('axios')
 let parallel = require('async/parallel')
 let { camelCase } = require('change-case')
+let redis = require("redis");
+
+client = redis.createClient();
 
 const parseRes = res => res.data;
 
@@ -8,6 +11,14 @@ const API_ROOT = 'https://www.alphavantage.co';
 
 const getHeaders = () => {
     let config = {
+        proxy: {
+            host: 'sdfdsf',
+            port: 53281,
+            // auth: {
+            //     username: 'mikeymike',
+            //     password: 'rapunz3l'
+            // },
+        },
         headers: {
             "Content-Type": "application/json"
         }
@@ -15,10 +26,30 @@ const getHeaders = () => {
     return config;
 }
 
+
+let clockNumber = 0;
+const getApiKey = () => {
+    const apikeys = [
+        '9FAKJ7UHB41SPYAI',
+        'Z0P7HYJJCPMXUE9O',
+        'B9BEVRFH8YHPZNDS',
+        'G3OPRNM2J4VZQBCJ',
+        'SXA54WR15U32UYEI',
+        'HOHVZXHTVUDS7KNO',
+        'QURS5PMEAPWDVH8T',
+        'DBKIMI3TMFK3IIPW',
+        'CBKHWSSNCZBHV393',
+    ];
+    clockNumber = clockNumber + 1;
+    let key = apikeys[clockNumber % apikeys.length]
+    console.log(key);
+    return key
+}
+
 const request = {
     get: (data) => http.get(`${API_ROOT}/query`, {
         params: {
-            apikey: 'Z0P7HYJJCPMXUE9O',
+            apikey: getApiKey(),
             ...data
         }
     }).then(parseRes),
@@ -35,6 +66,7 @@ const search = (keywords, callback) => {
         keywords
     }
     request.get(options).then(res => {
+        if ('Note' in res) callback(res);
         let result = res.bestMatches.map(item => {
             return {
                 symbol: item["1. symbol"],
@@ -55,7 +87,7 @@ const search = (keywords, callback) => {
 };
 
 const symbolBasicInfo = (symbol, callback) => {
-    parallel([
+    let getResponse = () => parallel([
         callback => {
             let options = {
                 function: 'TIME_SERIES_INTRADAY',
@@ -63,11 +95,12 @@ const symbolBasicInfo = (symbol, callback) => {
                 interval: '1min',
             }
             request.get(options).then(res => {
+                if ('Note' in res) callback(res);
                 let timeSeries = {};
-                Object.keys(res['Time Series (1min)']).map(dateTime => {
+                Object.keys(res['Time Series (1min)'] || {}).map(dateTime => {
                     let item = res['Time Series (1min)'][dateTime];
                     let retObj = {}
-                    Object.keys(item).map(key => retObj[parseKey(key)] = item[key])
+                    Object.keys(item || {}).map(key => retObj[parseKey(key)] = item[key])
                     timeSeries[dateTime] = retObj;
                 })
                 let result = {
@@ -103,6 +136,18 @@ const symbolBasicInfo = (symbol, callback) => {
             lastQuote: res3
         }
         callback(err, result)
+        client.set(`symbolBasicInfo-${symbol}`,JSON.stringify(result));
+    })
+
+    client.get(`symbolBasicInfo-${symbol}`, (err, value) => {
+        if (err) console.log(err);
+        if (value) {
+            value = JSON.parse(value);
+            callback(err, { ...value, source: 'redis' })
+        }
+        else {
+            getResponse();
+        }
     })
 }
 
@@ -112,8 +157,9 @@ const getQuote = (symbol, callback) => {
         symbol
     }
     request.get(options).then(res => {
+        if ('Note' in res) callback(res);
         let result = {};
-        Object.keys(res['Global Quote']).map(key =>
+        Object.keys(res['Global Quote'] || {}).map(key =>
             result[parseKey(key)] = res['Global Quote'][key]
         )
         callback(null, result)

@@ -21,7 +21,6 @@ let verifyJWTToken = (req, res, next) => {
 
             if ('exp' in decode && decode.exp - new Date().getTime() > 0) {
                 let { user_id } = decode;
-                console.log(decode)
                 req.user_id = user_id;
                 next()
             }
@@ -35,7 +34,27 @@ let verifyJWTToken = (req, res, next) => {
     }
 }
 
+const getInfo = (token, callback) => {
+    if (token) {
+        jwt.verify(token, SHA, (err, decode) => {
+
+            if (err) return callback(err);
+
+            if ('exp' in decode && decode.exp - new Date().getTime() > 0) {
+                callback(null, decode);
+            }
+            else {
+                callback('Token expired')
+            }
+        });
+    }
+    else {
+        callback('Token missing')
+    }
+}
+
 module.exports = {
     createJWToken,
-    verifyJWTToken
+    verifyJWTToken,
+    getInfo
 }
