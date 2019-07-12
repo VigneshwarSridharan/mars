@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import Reports from './views/Trading/reducer';
 import SymbolInfo from './views/SymbolInfo/reducer';
-
+import Chatting from './views/Chatting/reducer';
 
 
 const Dashboard = (state = { name: 'dashboard' }, action) => {
@@ -18,6 +18,7 @@ const Dashboard = (state = { name: 'dashboard' }, action) => {
 
 export default combineReducers({
     Dashboard,
+    Chatting,
     Reports,
     SymbolInfo
 })

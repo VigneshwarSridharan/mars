@@ -3,7 +3,7 @@ let parallel = require('async/parallel')
 let { camelCase } = require('change-case')
 let redis = require("redis");
 
-client = redis.createClient();
+let client = redis.createClient();
 
 const parseRes = res => res.data;
 
@@ -11,14 +11,6 @@ const API_ROOT = 'https://www.alphavantage.co';
 
 const getHeaders = () => {
     let config = {
-        proxy: {
-            host: 'sdfdsf',
-            port: 53281,
-            // auth: {
-            //     username: 'mikeymike',
-            //     password: 'rapunz3l'
-            // },
-        },
         headers: {
             "Content-Type": "application/json"
         }
@@ -65,7 +57,7 @@ const search = (keywords, callback) => {
         function: 'SYMBOL_SEARCH',
         keywords
     }
-    request.get(options).then(res => {
+    let getResponse = () => request.get(options).then(res => {
         if ('Note' in res) callback(res);
         let result = res.bestMatches.map(item => {
             return {
@@ -80,9 +72,22 @@ const search = (keywords, callback) => {
                 matchScore: item["9. matchScore"],
             }
         })
-        callback(null, result)
+        callback(null, result);
+        client.set(`search-symbol-${keywords}`, JSON.stringify(result));
     }).catch(err => {
         callback(err)
+    })
+
+    client.get(`search-symbol-${keywords}`, (err, value) => {
+        if (err) return console.log(err);
+
+        if (value) {
+            value = JSON.parse(value);
+            callback(err, value)
+        }
+        else {
+            getResponse();
+        }
     })
 };
 
@@ -136,7 +141,7 @@ const symbolBasicInfo = (symbol, callback) => {
             lastQuote: res3
         }
         callback(err, result)
-        client.set(`symbolBasicInfo-${symbol}`,JSON.stringify(result));
+        client.set(`symbolBasicInfo-${symbol}`, JSON.stringify(result));
     })
 
     client.get(`symbolBasicInfo-${symbol}`, (err, value) => {
@@ -156,14 +161,28 @@ const getQuote = (symbol, callback) => {
         function: 'GLOBAL_QUOTE',
         symbol
     }
-    request.get(options).then(res => {
+    let getResponse = () => request.get(options).then(res => {
         if ('Note' in res) callback(res);
         let result = {};
         Object.keys(res['Global Quote'] || {}).map(key =>
             result[parseKey(key)] = res['Global Quote'][key]
         )
-        callback(null, result)
+        callback(null, result);
+        client.set(`quote-symbol-${symbol}`, JSON.stringify(result), 'EX', 10);
     }).catch(err => callback(err))
+
+    client.get(`quote-symbol-${symbol}`, (err, value) => {
+        if (err) return console.log(err);
+
+        if (value) {
+            value = JSON.parse(value);
+            callback(err, { ...value, source: 'redis' })
+        }
+        else {
+            getResponse();
+        }
+    })
+
 }
 
 const Trading = {

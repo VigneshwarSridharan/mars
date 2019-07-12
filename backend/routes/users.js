@@ -2,16 +2,17 @@ let express = require('express');
 let router = express.Router();
 let sql = require('../utils/db');
 let User = require('../model/user');
-let { createJWToken } = require('../utils/jwt');
+let { createJWToken, verifyJWTToken } = require('../utils/jwt');
 let bindRes = require('../utils/bindRes');
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-    sql.query('SELECT * FROM users', (err, result) => {
+router.get('/', verifyJWTToken, function (req, res, next) {
+
+    User.allUsers((err, result = []) => {
         if (err) throw err
 
+        result = result.filter(f => f.user_id != req.user_id)
         bindRes(err, result, res);
-        res.json(result);
 
     })
 });

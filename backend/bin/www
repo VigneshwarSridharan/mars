@@ -8,6 +8,9 @@ var app = require('../app');
 var debug = require('debug')('backend:server');
 var http = require('http');
 
+var sendTradingSocket = require('../sokets/trading');
+var sendChattingSoket = require('../sokets/chatting');
+
 /**
  * Get port from environment and store in Express.
  */
@@ -20,11 +23,15 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-var io = require('socket.io')(server);
+var tradingSocket = require('socket.io')(server, {
+  path: '/soket/trading'
+});
+var chattingSoket = require('socket.io')(server, {
+  path: '/soket/chatting'
+})
 
-var sendSocket = require('../soket');
-
-sendSocket(io);
+sendTradingSocket(tradingSocket);
+sendChattingSoket(chattingSoket);
 
 /**
  * Listen on provided port, on all network interfaces.

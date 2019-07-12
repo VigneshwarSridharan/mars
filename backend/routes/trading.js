@@ -2,7 +2,7 @@ let express = require('express');
 let router = express.Router();
 let { verifyJWTToken } = require('../utils/jwt');
 let bindRes = require('../utils/bindRes');
-let Trading = require('../model/trading');
+let Alphavantage = require('../model/alphavantage');
 
 router.use(verifyJWTToken);
 
@@ -11,7 +11,7 @@ router.post('/search', (req, res) => {
 
     if (!query) return bindRes(true, "Keyword requires", res);
 
-    Trading.search(query, (err, result) => {
+    Alphavantage.search(query, (err, result) => {
         if (err) return bindRes(true, err, res);
 
         bindRes(err, result, res);
@@ -23,13 +23,16 @@ router.post('/symbolBasicInfo', (req, res) => {
 
     if (!symbol) return bindRes(true, "Symbol requires", res);
 
-    Trading.symbolBasicInfo(symbol, (err, result) => {
+    Alphavantage.symbolBasicInfo(symbol, (err, result) => {
         if (err) return bindRes(true, err, res);
 
         bindRes(err, result, res);
     })
 })
 
+router.post('/watchlist', (req,res) => {
+    
+})
 
 
 module.exports = router;

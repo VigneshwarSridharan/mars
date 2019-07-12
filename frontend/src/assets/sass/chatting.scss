@@ -1,0 +1,20 @@
+@import "./variables";
+
+.chatting-wrapper {
+    width: 20rem;
+    height: 100%;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    .header {
+        flex: 1;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    .chatting-contend {
+        flex: 1;
+        padding: 0.5rem;
+        overflow: auto;
+    }
+}

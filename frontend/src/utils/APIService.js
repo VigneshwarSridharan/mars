@@ -1,8 +1,7 @@
 import http from 'axios';
+import { API_ROOT } from '../constants';
 
 const parseRes = res => res.data;
-
-const API_ROOT = 'http://localhost:8100';
 
 const getHeaders = () => {
     let config = {
@@ -18,23 +17,24 @@ const getHeaders = () => {
 }
 
 const request = {
-    get: (url) => http.get(url, getHeaders()).then(parseRes),
-    post: (url, data) => http.post(url, data, getHeaders()).then(parseRes),
-    put: (url, data) => http.put(url, data, getHeaders()).then(parseRes),
-    delete: (url) => http.delete(url, getHeaders()).then(parseRes),
+    get: (url) => http.get(`${API_ROOT}${url}`, getHeaders()).then(parseRes),
+    post: (url, data) => http.post(`${API_ROOT}${url}`, data, getHeaders()).then(parseRes),
+    put: (url, data) => http.put(`${API_ROOT}${url}`, data, getHeaders()).then(parseRes),
+    delete: (url) => http.delete(`${API_ROOT}${url}`, getHeaders()).then(parseRes),
 }
 
 const User = {
-    login: (username, password) => request.post(`${API_ROOT}/users/login`, { username, password })
+    login: (username, password) => request.post(`/users/login`, { username, password }),
+    getUsers: () => request.get(`/users`)
 }
 
 const Railway = {
-    all: () => request.post(`${API_ROOT}/railway`),
+    all: () => request.post(`/railway`),
 }
 
 const Trading = {
-    getSymbols: query => request.post(`${API_ROOT}/trading/search`,{query}),
-    getSymbolBasicInfo: symbol => request.post(`${API_ROOT}/trading/symbolBasicInfo`,{symbol})
+    getSymbols: query => request.post(`/trading/search`,{query}),
+    getSymbolBasicInfo: symbol => request.post(`/trading/symbolBasicInfo`,{symbol})
 }
 
 export {

@@ -1,4 +1,4 @@
-import { UPDATE_INFO } from "./constants";
+import { UPDATE_INFO, UPDATE_QUOTE } from "./constants";
 
 const defaultState = {
     metaData: {},
@@ -6,11 +6,18 @@ const defaultState = {
     lastQuote: {}
 };
 
-export default (state = defaultState, action) => {
-    switch (action.type) {
+export default (state = defaultState, { type, payload, ...action }) => {
+    switch (type) {
         case UPDATE_INFO:
             return {
-                ...action.payload
+                ...payload
+            }
+        case UPDATE_QUOTE:
+            return {
+                ...state,
+                lastQuote: {
+                    ...payload
+                }
             }
         default:
             return state;

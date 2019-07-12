@@ -21,13 +21,17 @@ module.exports = {
         })
     },
 
-    userInfo: (id, callback) => {
-        sql.query(`SELECT * FROM users WHERE user_id = ${id};`,(err,result) => {
-            if(err) return callback(err);
+    allUsers: callback => {
+        sql.query(`SELECT user_id,username,first_name,last_name FROM users;`, callback)
+    },
 
-            if(result.length) {
+    userInfo: (id, callback) => {
+        sql.query(`SELECT * FROM users WHERE user_id = ${id};`, (err, result) => {
+            if (err) return callback(err);
+
+            if (result.length) {
                 let [user] = result;
-                callback(err,user);
+                callback(err, user);
             }
             else {
                 callback('user not found')

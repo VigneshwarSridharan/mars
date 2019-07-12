@@ -1,6 +1,6 @@
 import React from 'react';
 import { Trail } from 'react-spring/renderprops';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 
 const Animate = ({ children, ...props }) => {
@@ -16,7 +16,7 @@ const Animate = ({ children, ...props }) => {
 }
 
 Animate.propTypes = {
-    children: PropTypes.arrayOf(PropTypes.element)
+    // children: PropTypes.arrayOf(PropTypes.element) || PropTypes.element
 }
 
 Animate.defaultProps = {
