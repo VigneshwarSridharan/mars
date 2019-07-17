@@ -5,6 +5,10 @@ let User = require('../model/user');
 let { createJWToken, verifyJWTToken } = require('../utils/jwt');
 let bindRes = require('../utils/bindRes');
 
+let redis = require("redis");
+
+let client = redis.createClient();
+
 /* GET users listing. */
 router.get('/', verifyJWTToken, function (req, res, next) {
 
@@ -31,6 +35,12 @@ router.post('/login', (req, res) => {
         delete result.user_id;
         delete result.status;
         bindRes(err, { ...result, token }, res);
+    })
+})
+
+router.get('/test',(req,res) => {
+    client.keys('search*',(err,keys) => {
+        res.json(keys);
     })
 })
 

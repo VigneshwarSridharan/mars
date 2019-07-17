@@ -11,10 +11,41 @@
         padding: 0.5rem 1rem;
         font-weight: bold;
         font-size: 18px;
+        .person-name {
+            line-height: 1;
+        }
     }
-    .chatting-contend {
+    .chatting-contend, .chatting-users {
         flex: 1;
         padding: 0.5rem;
         overflow: auto;
+    }
+    .chatting-contend {
+        height: 100%;
+        flex: auto;
+        display: flex;
+        flex-direction: column;
+        .conversation {
+            // flex: 1;
+            min-height: 100%;
+            overflow: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            // padding: .5rem 0;
+            .item {
+                margin-bottom: .25rem;
+                padding: .5rem 1rem;
+                border-radius: 5px;
+                background-color: #ededed;
+                display: inline-block;
+                color: #fff;
+                &.send {
+                    align-self:flex-end;
+                }
+                &.receive{
+                    align-self:flex-start;
+                }
+            }
+        }
     }
 }

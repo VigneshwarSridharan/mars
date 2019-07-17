@@ -4,11 +4,10 @@ import { Spring } from 'react-spring/renderprops';
 import '../../assets/sass/chatting.scss';
 import { API_ROOT } from '../../constants';
 import { User } from '../../utils/APIService';
-import { UPDATE_USERS, SET_CHAT_TO, UPDATE_ACTIVE_USERS } from './constants';
+import { UPDATE_USERS, SET_CHAT_TO, UPDATE_ACTIVE_USERS, UPDATE_CONVERSATION, TOGGLE_CHATTING, TOGGLE_TYPING } from './constants';
 import { Scrollbars } from 'react-custom-scrollbars'
-import Form from 'reactstrap/lib/Form';
-import Input from 'reactstrap/lib/Input';
-import Button from 'reactstrap/lib/Button';
+import Conversation from './Conversation';
+import SendMessage from './SendMessage';
 
 class Chatting extends React.Component {
     state = {}
@@ -21,7 +20,6 @@ class Chatting extends React.Component {
         let { updateUsers } = this.props;
         User.getUsers().then(res => {
             if (res.status == "success") {
-                console.log(res.data)
                 updateUsers(res.data);
             }
             else {
@@ -30,11 +28,25 @@ class Chatting extends React.Component {
         })
     }
 
+    componentWillReceiveProps = (props) => {
+        if (this.props.chatTo != props.chatTo) {
+            let { chatTo } = props;
+            let { toggleTyping } = this.props
+            this.socket.on('typing', data => {
+                console.log({ data, chatTo });
+                let { focus, user_id } = data;
+                if (chatTo.user_id == user_id) {
+                    toggleTyping(focus)
+                }
+            })
+        }
+    }
+
     createSoket = () => {
         let { token } = localStorage;
 
         // Actions
-        let { updateActiveUsers } = this.props
+        let { updateActiveUsers, updateConversation, toggleChatting } = this.props
 
         if (!token) return console.error("Token missing, can't create soket connection");
 
@@ -52,13 +64,23 @@ class Chatting extends React.Component {
         })
 
         this.socket.on('message', data => {
-            console.log(data);
+            updateConversation(data)
         })
 
-        window.sendMsg = (id, message) => {
-            this.socket.emit('message', { id, message })
+        window.setFocus = (user_id, focus) => {
+            this.socket.emit('typing', { user_id, focus })
         }
 
+    }
+
+    sendMessage = message => {
+        let { chatTo } = this.props;
+
+        // Actions
+        let { updateConversation } = this.props;
+        let data = { user_id: chatTo.user_id, message, type: "send" };
+        this.socket.emit('message', data);
+        updateConversation(data);
     }
 
     componentWillUnmount = () => {
@@ -70,6 +92,7 @@ class Chatting extends React.Component {
 
         // Actions
         let { setChatTo } = this.props;
+        let { sendMessage } = this;
 
         return (
             <Spring
@@ -83,8 +106,19 @@ class Chatting extends React.Component {
                                 {
                                     Object.keys(chatTo).length ?
                                         (
-                                            <div className="header text-capitalize d-flex align-items-center">
-                                                <span className="mdi mdi-arrow-left mr-2 p-1 pointer" onClick={() => setChatTo({})}></span>{chatTo.first_name} {chatTo.last_name}
+                                            <div className="header text-capitalize d-flex align-items-center border-bottom">
+                                                <div className="d-flex align-items-center">
+                                                    <span className="mdi mdi-arrow-left mr-2 p-1 pointer" onClick={() => setChatTo({})}></span>
+                                                    <div>
+                                                        <div className="person-name">
+                                                            {chatTo.first_name} {chatTo.last_name}
+                                                        </div>
+                                                        {
+                                                            chatTo.typing ? <small>Typing..</small> :
+                                                                Object.values(activeUsers).indexOf(chatTo.user_id) == -1 ? '' : <small className="text-success">Active</small>
+                                                        }
+                                                    </div>
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className="header">
@@ -92,28 +126,28 @@ class Chatting extends React.Component {
                                             </div>
                                         )
                                 }
-                                <Scrollbars>
-                                    <div className="chatting-contend">
-                                        {
-                                            Object.keys(chatTo).length ? (
-                                                <div>
-                                                    <Form name="send_message" className="d-flex">
-                                                        <Input name="message" required />
-                                                        <Button className="ml-2" type="submit" color="primary"><i className="mdi mdi-send"></i></Button>
-                                                    </Form>
-                                                </div>
-                                            ) :
-                                                users.map((user, inx) => {
-                                                    let checkActive = Object.values(activeUsers).indexOf(user.user_id)
-                                                    return (
-                                                        <div className="p-3 mb-1 bg-light text-capitalize pointer" key={`chat-user-${inx}`} onClick={() => setChatTo(user)}>
-                                                            <span>{user.first_name} {user.last_name}</span> {checkActive != -1 && '( A )'}
-                                                        </div>
-                                                    )
-                                                })
-                                        }
-                                    </div>
-                                </Scrollbars>
+                                {
+                                    Object.keys(chatTo).length ? (
+                                        <div className="chatting-contend">
+                                            <Conversation />
+                                            <SendMessage sendMessage={sendMessage} />
+                                        </div>
+                                    ) :
+                                        <Scrollbars>
+                                            <div className="chatting-users">
+                                                {
+                                                    users.map((user, inx) => {
+                                                        let checkActive = Object.values(activeUsers).indexOf(user.user_id)
+                                                        return (
+                                                            <div className="p-3 mb-1 bg-light text-capitalize pointer" key={`chat-user-${inx}`} onClick={() => setChatTo(user)}>
+                                                                <span>{user.first_name} {user.last_name}</span> {checkActive != -1 && '( A )'}
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
+                                        </Scrollbars>
+                                }
                             </div>
                         </div>
                     )
@@ -144,6 +178,16 @@ const mapDispatchToProps = dispatch => ({
 
     updateActiveUsers: payload => dispatch({
         type: UPDATE_ACTIVE_USERS,
+        payload
+    }),
+
+    updateConversation: payload => dispatch({
+        type: UPDATE_CONVERSATION,
+        payload
+    }),
+
+    toggleTyping: payload => dispatch({
+        type: TOGGLE_TYPING,
         payload
     }),
 
