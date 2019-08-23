@@ -8,6 +8,7 @@ import { UPDATE_USERS, SET_CHAT_TO, UPDATE_ACTIVE_USERS, UPDATE_CONVERSATION, TO
 import { Scrollbars } from 'react-custom-scrollbars'
 import Conversation from './Conversation';
 import SendMessage from './SendMessage';
+import { avatar } from '../../utils';
 
 class Chatting extends React.Component {
     state = {}
@@ -35,7 +36,7 @@ class Chatting extends React.Component {
             this.socket.on('typing', data => {
                 console.log({ data, chatTo });
                 let { focus, user_id } = data;
-                if (chatTo.user_id == user_id) {
+                if (chatTo.user_id == user_id && Object.keys(chatTo).length > 1) {
                     toggleTyping(focus)
                 }
             })
@@ -83,8 +84,24 @@ class Chatting extends React.Component {
         updateConversation(data);
     }
 
+    onTyping = focus => {
+        let { chatTo } = this.props;
+        let { user_id } = chatTo;
+        this.socket.emit('typing', { user_id, focus })
+    }
+
     componentWillUnmount = () => {
         this.socket.close();
+    }
+
+    getLastMessage = id => {
+        let messages = localStorage.getItem(`chat-for-${id}`)
+        if (messages) {
+            messages = JSON.parse(messages);
+            let [lastMessage] = messages;
+            return lastMessage;
+        }
+        return false
     }
 
     render() {
@@ -92,7 +109,7 @@ class Chatting extends React.Component {
 
         // Actions
         let { setChatTo } = this.props;
-        let { sendMessage } = this;
+        let { sendMessage, onTyping, getLastMessage } = this;
 
         return (
             <Spring
@@ -130,7 +147,7 @@ class Chatting extends React.Component {
                                     Object.keys(chatTo).length ? (
                                         <div className="chatting-contend">
                                             <Conversation />
-                                            <SendMessage sendMessage={sendMessage} />
+                                            <SendMessage sendMessage={sendMessage} onTyping={onTyping} />
                                         </div>
                                     ) :
                                         <Scrollbars>
@@ -138,9 +155,16 @@ class Chatting extends React.Component {
                                                 {
                                                     users.map((user, inx) => {
                                                         let checkActive = Object.values(activeUsers).indexOf(user.user_id)
+                                                        let lastMessage = getLastMessage(user.user_id)
                                                         return (
-                                                            <div className="p-3 mb-1 bg-light text-capitalize pointer" key={`chat-user-${inx}`} onClick={() => setChatTo(user)}>
-                                                                <span>{user.first_name} {user.last_name}</span> {checkActive != -1 && '( A )'}
+                                                            <div className="p-2 rounded mb-1 bg-light text-capitalize pointer d-flex align-items-center" key={`chat-user-${inx}`} onClick={() => setChatTo(user)}>
+                                                                <div>
+                                                                    <img src={avatar(user.first_name)} className="mr-2" alt="" />
+                                                                </div>
+                                                                <div>
+                                                                    <div>{user.first_name} {user.last_name} {checkActive != -1 && '( A )'}</div>
+                                                                    {lastMessage ? <small><b>{lastMessage.message}</b></small> : ''}
+                                                                </div>
                                                             </div>
                                                         )
                                                     })

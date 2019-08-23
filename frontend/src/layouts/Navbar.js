@@ -21,7 +21,8 @@ const Navbar = (props) => {
                     <i className="mdi mdi-bell" />
                 </div>
                 <div className="item" onClick={() => {
-                    localStorage.clear();
+                    localStorage.removeItem('userDetails');
+                    localStorage.removeItem('token');
                     window.location = '/';
                 }}>
                     <i className="mdi mdi-power" />

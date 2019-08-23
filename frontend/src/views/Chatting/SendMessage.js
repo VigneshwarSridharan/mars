@@ -5,7 +5,7 @@ import Button from 'reactstrap/lib/Button';
 
 const SendMessage = props => {
     // Actions
-    let { sendMessage } = props;
+    let { sendMessage, onTyping } = props;
     const onSubmit = e => {
         e.preventDefault();
         let form = document.forms.send_message;
@@ -14,7 +14,7 @@ const SendMessage = props => {
         form.reset()
     }
     return (
-        <Form name="send_message" autoComplete="off" onSubmit={onSubmit} className="d-flex">
+        <Form name="send_message" onFocus={() => onTyping(true)} onBlur={() => onTyping(false)} autoComplete="off" onSubmit={onSubmit} className="d-flex">
             <Input name="message" required />
             <Button className="ml-2" type="submit" color="primary"><i className="mdi mdi-send"></i></Button>
         </Form>
