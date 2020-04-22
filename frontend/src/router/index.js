@@ -4,6 +4,8 @@ const Dashboard = lazy(() => import(/* webpackChunkName: "dashboard" */'../views
 const Calendar = lazy(() => import(/* webpackChunkName: "calendar" */'../views/Calendar'));
 const Trading = lazy(() => import(/* webpackChunkName: "reports" */'../views/Trading'));
 const SymbolInfo = lazy(() => import(/* webpackChunkName: "symbol-info" */'../views/SymbolInfo'));
+const BugCatcher = lazy(() => import(/* webpackChunkName: "bug-catcher" */'../views/BugCatcher'));
+const BugDetails = lazy(() => import(/* webpackChunkName: "bug-details" */'../views/BugDetails'));
 
 
 
@@ -17,12 +19,6 @@ export default [
         animation: false
     },
     {
-        path: '/calendar',
-        component: Calendar,
-        name: 'Calendar',
-        icon: 'mdi mdi-calendar'
-    },
-    {
         path: '/trading/:symbol',
         component: SymbolInfo,
         name: 'Symbol Info',
@@ -34,6 +30,19 @@ export default [
         component: Trading,
         name: 'Trading',
         icon: 'mdi mdi-chart-timeline-variant'
+    },
+    {
+        path: '/bug/:id',
+        component: BugDetails,
+        name: 'Bug Details',
+        icon: 'mdi mdi-bug',
+        display: false
+    },
+    {
+        path: '/bug',
+        component: BugCatcher,
+        name: 'Bug Catcher',
+        icon: 'mdi mdi-bug'
     },
     {
         path: '/communication',

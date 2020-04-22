@@ -37,8 +37,14 @@ const Trading = {
     getSymbolBasicInfo: symbol => request.post(`/trading/symbolBasicInfo`,{symbol})
 }
 
+const BugCatcher = {
+    all: () => request.get(`/bug-catcher`),
+    getDetails: id => request.get(`/bug-catcher/${id}`)
+}
+
 export {
     User,
     Railway,
-    Trading
+    Trading,
+    BugCatcher
 }

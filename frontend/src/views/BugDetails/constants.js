@@ -1,0 +1,2 @@
+export const SET_BUG_DETAILS = "SET_BUG_DETAILS"
+export const RESET_BUG_DETAILS = "RESET_BUG_DETAILS"

@@ -1,0 +1,23 @@
+@import './variables';
+
+.bug-info {
+    .top-info {
+        position: relative;
+        z-index: 1;
+        &:after {
+            content: "";
+            width: 100%;
+            border-bottom: solid 1px #ededed;
+            position: absolute;
+            bottom: 0;
+            z-index: -1;
+        }
+        .error-icon {
+            border-bottom-left-radius: 0 !important;
+        }
+    }
+    .content {
+        padding: 1rem;
+        // padding-left: 5rem;
+    }
+}

@@ -1,0 +1,2 @@
+export const UPDATE_BUG_LIST = 'UPDATE_BUG_LIST'
+export const ADD_BUG_ITEM = 'ADD_BUG_ITEM'

@@ -29,6 +29,11 @@ var tradingSocket = require('socket.io')(server, {
 var chattingSoket = require('socket.io')(server, {
   path: '/soket/chatting'
 })
+var bugCatcherSoket = require('socket.io')(server, {
+  path: '/soket/bug-catcher'
+})
+
+app.bugCatcherSoket = bugCatcherSoket;
 
 sendTradingSocket(tradingSocket);
 sendChattingSoket(chattingSoket);

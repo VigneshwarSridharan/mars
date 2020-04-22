@@ -1,7 +1,7 @@
 import { TOGGLE_CHATTING, UPDATE_USERS, SET_CHAT_TO, UPDATE_ACTIVE_USERS, UPDATE_CONVERSATION, TOGGLE_TYPING } from "./constants";
 
 const defaultState = {
-    isOpen: true,
+    isOpen: false,
     users: [],
     chatTo: {},
     active: {},

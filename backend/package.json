@@ -19,7 +19,8 @@
     "morgan": "~1.9.1",
     "mysql": "^2.17.1",
     "redis": "^2.8.0",
-    "socket.io": "^2.2.0"
+    "socket.io": "^2.2.0",
+    "uuid": "^7.0.3"
   },
   "author": "Vigneshwar Sridharan"
 }
